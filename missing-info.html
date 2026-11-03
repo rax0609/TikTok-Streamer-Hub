@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>資料缺漏查詢 | TikTok Streamer Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        html, body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            overflow-y: scroll;
+        }
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar,
+        *::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-white);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .stat-card:hover {
+            background-color: var(--card-bg-hover);
+            transform: translateY(-2px);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            color: var(--text-primary);
+        }
+        
+        .stat-number {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .missing-section {
+            margin-bottom: 2rem;
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-white);
+            padding: 1.5rem;
+        }
+        
+        .missing-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--border-white);
+            color: var(--text-primary);
+        }
+
+        .missing-section h2 i {
+            color: var(--text-primary);
+        }
+        
+        .missing-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .missing-person {
+            background-color: #000000;
+            border: 1px solid var(--border-white);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .missing-person:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .missing-person:hover .missing-role {
+            color: #444444;
+        }
+        
+        .missing-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-white);
+            background-color: #000000;
+        }
+        
+        .missing-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .missing-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .missing-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .progress-container {
+            margin-bottom: 2rem;
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-white);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .progress-percentage {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .progress-bar-wrapper {
+            height: 10px;
+            background-color: #000000;
+            border: 1px solid var(--border-white);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #ffffff;
+            transition: width 0.8s ease;
+        }
+
+        .no-missing-data {
+            padding: 1.25rem;
+            text-align: center;
+            color: #ffffff;
+            font-weight: 600;
+            grid-column: 1 / -1;
+            background-color: #000000;
+            border-radius: var(--radius-sm);
+            border: 1px dashed var(--border-white);
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <div class="container">
+        <!-- 頂部頁頭 -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-badge">
+                    <i class="fab fa-tiktok"></i>
+                    <span>STREAMER HUB · AUDIT</span>
+                </div>
+                <h1>社群成員資料缺漏分析</h1>
+                <p class="brand-subtitle">檢視成員資料完整度，點擊人員小卡可快速返回首頁進行編輯</p>
+            </div>
+            <div class="search-container">
+                <a href="index.html" class="primary-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>返回成員列表</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- 資料完整度進度條 -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span><i class="fas fa-chart-line" style="margin-right:6px;"></i> 全局資料總體完整度</span>
+                <span class="progress-percentage" id="completionRate">0%</span>
+            </div>
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar" id="completionBar" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- 四大統計數字卡片 -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <i class="fas fa-cake-candles stat-icon"></i>
+                <div class="stat-number" id="missingBirthdayCount">0</div>
+                <div class="stat-label">缺少生日資料</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star stat-icon"></i>
+                <div class="stat-number" id="missingZodiacCount">0</div>
+                <div class="stat-label">缺少星座推算</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-tv stat-icon"></i>
+                <div class="stat-number" id="missingAnimeCount">0</div>
+                <div class="stat-label">缺少動漫/話題喜好</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-utensils stat-icon"></i>
+                <div class="stat-number" id="missingFoodCount">0</div>
+                <div class="stat-label">缺少美食/禮物偏好</div>
+            </div>
+        </div>
+        
+        <!-- 缺漏分類列表 -->
+        <div class="missing-section">
+            <h2><i class="fas fa-cake-candles"></i> 缺少生日資料的成員</h2>
+            <div class="missing-list" id="missingBirthdayList"></div>
+        </div>
+        
+        <div class="missing-section">
+            <h2><i class="fas fa-star"></i> 缺少星座資料的成員</h2>
+            <div class="missing-list" id="missingZodiacList"></div>
+        </div>
+        
+        <div class="missing-section">
+            <h2><i class="fas fa-tv"></i> 缺少動漫話題紀錄的成員</h2>
+            <div class="missing-list" id="missingAnimeList"></div>
+        </div>
+        
+        <div class="missing-section">
+            <h2><i class="fas fa-utensils"></i> 缺少美食禮物偏好的成員</h2>
+            <div class="missing-list" id="missingFoodList"></div>
+        </div>
+    </div>
+    
+    <script>
+        const STORAGE_KEY = 'tiktok_streamer_crew_data';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            analyzeMissingData();
+        });
+        
+        function getCrewDataFromStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) return parsed;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            return [];
+        }
+
+        function getAvatarUrl(person) {
+            if (person.avatar && person.avatar.trim() !== '') {
+                return person.avatar;
+            }
+            const seed = encodeURIComponent(person.name || 'streamer');
+            return `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${seed}&radius=50`;
+        }
+
+        function analyzeMissingData() {
+            const crewData = getCrewDataFromStorage();
+            if (crewData.length === 0) {
+                document.getElementById('completionRate').textContent = '0%';
+                return;
+            }
+
+            const missingBirthday = crewData.filter(p => !p.birthday || !p.birthday.trim());
+            const missingZodiac = crewData.filter(p => !p.zodiac || !p.zodiac.trim());
+            const missingAnime = crewData.filter(p => !p.anime || !p.anime.trim());
+            const missingFood = crewData.filter(p => !p.food || !p.food.trim());
+            
+            document.getElementById('missingBirthdayCount').textContent = missingBirthday.length;
+            document.getElementById('missingZodiacCount').textContent = missingZodiac.length;
+            document.getElementById('missingAnimeCount').textContent = missingAnime.length;
+            document.getElementById('missingFoodCount').textContent = missingFood.length;
+            
+            const totalFields = crewData.length * 4;
+            const missingTotal = missingBirthday.length + missingZodiac.length + missingAnime.length + missingFood.length;
+            const rate = Math.max(0, Math.round(((totalFields - missingTotal) / totalFields) * 100));
+            
+            document.getElementById('completionRate').textContent = `${rate}%`;
+            document.getElementById('completionBar').style.width = `${rate}%`;
+            
+            renderList(missingBirthday, 'missingBirthdayList');
+            renderList(missingZodiac, 'missingZodiacList');
+            renderList(missingAnime, 'missingAnimeList');
+            renderList(missingFood, 'missingFoodList');
+        }
+        
+        function renderList(people, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (people.length === 0) {
+                const noData = document.createElement('div');
+                noData.className = 'no-missing-data';
+                noData.innerHTML = '<i class="fas fa-check-double"></i> 所有成員此項目資料皆已填寫齊全！';
+                container.appendChild(noData);
+                return;
+            }
+            
+            people.forEach(person => {
+                const card = document.createElement('div');
+                card.className = 'missing-person';
+                card.innerHTML = `
+                    <img class="missing-avatar" src="${getAvatarUrl(person)}" alt="${person.name}" onerror="this.src='image/default-avatar.svg'">
+                    <div class="missing-info">
+                        <span class="missing-name">${person.name}</span>
+                        <span class="missing-role">${person.role || '家族成員'}</span>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    localStorage.setItem('searchPerson', person.name);
+                    window.location.href = 'index.html';
+                });
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>

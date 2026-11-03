@@ -1,0 +1,14 @@
+# 隱私與備份檔案（請勿上傳真實個資）
+private-real-data*
+*backup*
+image-private-backup/
+*.backup.*
+
+# 系統與編輯器暫存
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
+

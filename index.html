@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主播粉絲社群資料庫 | TikTok Streamer Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+    <div class="container">
+        <!-- 頂部頁頭 -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-badge">
+                    <i class="fab fa-tiktok"></i>
+                    <span>LIVE STREAMER HUB</span>
+                </div>
+                <h1>主播粉絲社群資料庫</h1>
+                <p class="brand-subtitle">專為 TikTok 主播打造的鐵粉喜好、身分與生日管理工具</p>
+            </div>
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="搜尋姓名、身分、TikTok ID、喜好...">
+                    <button id="clearSearchBtn" class="clear-search-btn" title="清除搜尋" style="display: none;">&times;</button>
+                </div>
+                <div class="header-actions">
+                    <button id="addPersonBtn" class="primary-btn glow-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>新增成員</span>
+                    </button>
+                    <a href="missing-info.html" class="icon-btn" title="查看資料缺漏與完整度分析">
+                        <i class="fas fa-chart-pie"></i>
+                    </a>
+                    <button id="exportBtn" class="icon-btn" title="匯出 JSON 備份">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button id="importBtn" class="icon-btn" title="匯入 JSON 備份">
+                        <i class="fas fa-upload"></i>
+                    </button>
+                    <input id="importInput" type="file" accept="application/json" hidden>
+                    <button id="dataManageBtn" class="icon-btn" title="資料庫管理（重設/備份）">
+                        <i class="fas fa-database"></i>
+                    </button>
+                    <button id="themeToggle" class="icon-btn" title="切換深色/淺色主題">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 篩選列 -->
+        <div class="filters">
+            <div class="filter-pills">
+                <button class="filter-btn active" data-filter="all"><i class="fas fa-users"></i> 全部</button>
+                <button class="filter-btn" data-filter="today"><i class="fas fa-cake-candles"></i> 今日壽星</button>
+                <button class="filter-btn" data-filter="role"><i class="fas fa-crown"></i> 身分標籤</button>
+                <button class="filter-btn" data-filter="zodiac"><i class="fas fa-star"></i> 星座</button>
+                <button class="filter-btn" data-filter="month"><i class="fas fa-calendar-alt"></i> 生日月</button>
+                <button class="filter-btn" data-filter="anime"><i class="fas fa-tv"></i> 動漫話題</button>
+                <button class="filter-btn" data-filter="food"><i class="fas fa-utensils"></i> 美食偏好</button>
+            </div>
+            
+            <div class="filter-selectors">
+                <!-- 身分標籤選擇器 -->
+                <div class="selector-container role-selector">
+                    <div class="select-box">
+                        <select id="roleSelect" class="styled-select">
+                            <option value="">選擇身分標籤</option>
+                            <option value="榜一大哥">榜一大哥</option>
+                            <option value="榜二大哥">榜二大哥</option>
+                            <option value="管理員">管理員</option>
+                            <option value="守護神">守護神</option>
+                            <option value="鐵粉">鐵粉</option>
+                            <option value="燈牌常駐">燈牌常駐</option>
+                            <option value="連麥嘉賓">連麥嘉賓</option>
+                            <option value="家族成員">家族成員</option>
+                        </select>
+                        <i class="fas fa-crown select-icon"></i>
+                    </div>
+                </div>
+
+                <!-- 星座選擇器 -->
+                <div class="selector-container zodiac-selector">
+                    <div class="select-box">
+                        <select id="zodiacSelect" class="styled-select">
+                            <option value="">選擇星座</option>
+                            <option value="水瓶">水瓶座</option>
+                            <option value="雙魚">雙魚座</option>
+                            <option value="牡羊">牡羊座</option>
+                            <option value="金牛">金牛座</option>
+                            <option value="雙子">雙子座</option>
+                            <option value="巨蟹">巨蟹座</option>
+                            <option value="獅子">獅子座</option>
+                            <option value="處女">處女座</option>
+                            <option value="天秤">天秤座</option>
+                            <option value="天蠍">天蠍座</option>
+                            <option value="射手">射手座</option>
+                            <option value="魔羯">魔羯座</option>
+                        </select>
+                        <i class="fas fa-star select-icon"></i>
+                    </div>
+                </div>
+
+                <!-- 月份選擇器 -->
+                <div class="selector-container month-selector">
+                    <div class="select-box">
+                        <select id="monthSelect" class="styled-select">
+                            <option value="">選擇月份</option>
+                            <option value="1">1 月</option>
+                            <option value="2">2 月</option>
+                            <option value="3">3 月</option>
+                            <option value="4">4 月</option>
+                            <option value="5">5 月</option>
+                            <option value="6">6 月</option>
+                            <option value="7">7 月</option>
+                            <option value="8">8 月</option>
+                            <option value="9">9 月</option>
+                            <option value="10">10 月</option>
+                            <option value="11">11 月</option>
+                            <option value="12">12 月</option>
+                        </select>
+                        <i class="fas fa-calendar-alt select-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 生日頂部提示條 -->
+        <div id="birthdayAlert" class="birthday-alert">
+            <div class="birthday-alert-content">
+                <i class="fas fa-birthday-cake birthday-icon"></i>
+                <span id="birthdayMessage"></span>
+                <button id="openBirthdayCelebration" class="celebrate-btn">點我祝賀 🎉</button>
+                <button id="closeBirthdayAlert" class="close-birthday-alert" aria-label="關閉提示">&times;</button>
+            </div>
+        </div>
+
+        <!-- 篩選結果計數列 -->
+        <div id="filterResults" class="filter-results">
+            <span id="resultCount"></span>
+            <button id="resetFilterBtn" class="reset-filter-btn" style="display:none;"><i class="fas fa-times"></i> 清除篩選</button>
+        </div>
+
+        <!-- 成員卡片網格容器 -->
+        <div class="cards-container" id="cardsContainer">
+            <!-- 由 JavaScript 動態生成卡片 -->
+        </div>
+
+        <!-- 空狀態展示 -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon"><i class="fas fa-user-astronaut"></i></div>
+            <h3>找不到符合的成員資料</h3>
+            <p>試著調整搜尋字詞或篩選條件，或直接新增一位成員！</p>
+            <button id="emptyAddBtn" class="primary-btn"><i class="fas fa-plus"></i> 新增第一位成員</button>
+        </div>
+    </div>
+
+    <!-- 成員詳情彈窗 (Person Detail Modal) -->
+    <div class="modal" id="personModal" aria-hidden="true">
+        <div class="modal-content person-modal-content">
+            <button class="close-btn" id="closeDetailBtn" aria-label="關閉">&times;</button>
+            <div class="modal-body">
+                <div class="person-details">
+                    <div class="person-avatar-wrap">
+                        <img id="modalAvatar" src="" alt="成員頭像">
+                        <div id="modalRoleBadge" class="role-badge"></div>
+                    </div>
+                    <div class="person-info">
+                        <div class="title-row">
+                            <h2 id="modalName"></h2>
+                            <span id="modalTiktokId" class="tiktok-id-badge"></span>
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item"><i class="fas fa-cake-candles"></i> <strong>生日：</strong><span id="modalBirthday"></span></div>
+                            <div class="info-item"><i class="fas fa-star"></i> <strong>星座：</strong><span id="modalZodiac"></span></div>
+                            <div class="info-item"><i class="fas fa-tv"></i> <strong>動漫愛好：</strong><span id="modalAnime"></span></div>
+                            <div class="info-item"><i class="fas fa-utensils"></i> <strong>美食禮物：</strong><span id="modalFood"></span></div>
+                        </div>
+                        <div class="notes-box" id="modalNotesBox">
+                            <h4><i class="fas fa-sticky-note"></i> 主播筆記 / 互動備忘</h4>
+                            <p id="modalNotes"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="detailEditBtn" class="secondary-btn"><i class="fas fa-pen"></i> 編輯資料</button>
+                <button id="detailDeleteBtn" class="danger-btn"><i class="fas fa-trash-alt"></i> 刪除成員</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增 / 編輯成員彈窗 (Editor Modal) -->
+    <div class="modal" id="editorModal" aria-hidden="true">
+        <div class="modal-content editor-content">
+            <button class="close-btn" id="closeEditorBtn" aria-label="關閉">&times;</button>
+            <div class="editor-header">
+                <i class="fas fa-user-edit modal-header-icon"></i>
+                <div>
+                    <h2 id="editorTitle">新增社群成員</h2>
+                    <p class="editor-sub">填寫鐵粉或直播家族成員資訊，生日將自動計算星座</p>
+                </div>
+            </div>
+            <form id="personForm" class="person-form">
+                <input type="hidden" id="personId" name="id">
+                
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="personName">成員姓名 / 暱稱 <span class="required">*</span></label>
+                        <input id="personName" name="name" required maxlength="40" placeholder="例如：星星榜一">
+                    </div>
+                    <div class="form-group">
+                        <label for="personRole">身分標籤 / 徽章</label>
+                        <div class="input-with-datalist">
+                            <input id="personRole" name="role" list="roleSuggestions" placeholder="例如：榜一大哥、房管、鐵粉">
+                            <datalist id="roleSuggestions">
+                                <option value="榜一大哥">
+                                <option value="榜二大哥">
+                                <option value="管理員">
+                                <option value="守護神">
+                                <option value="鐵粉">
+                                <option value="燈牌常駐">
+                                <option value="連麥嘉賓">
+                                <option value="家族成員">
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="personTiktokId">TikTok 帳號 / 抖音號</label>
+                        <input id="personTiktokId" name="tiktokId" placeholder="例如：@streamer_fan">
+                    </div>
+                    <div class="form-group">
+                        <label for="personBirthday">生日 (月/日)</label>
+                        <input id="personBirthday" name="birthday" placeholder="例如：8/21" pattern="^(1[0-2]|[1-9])/(3[01]|[12][0-9]|[1-9])$" title="請輸入 月/日 格式，如 8/21">
+                        <small class="form-hint">輸入後將自動推薦星座</small>
+                    </div>
+                </div>
+
+                <div class="form-row two-cols">
+                    <div class="form-group">
+                        <label for="personZodiac">星座</label>
+                        <select id="personZodiac" name="zodiac">
+                            <option value="">自動判定 / 未知</option>
+                            <option value="水瓶">水瓶座 (1/20 - 2/18)</option>
+                            <option value="雙魚">雙魚座 (2/19 - 3/20)</option>
+                            <option value="牡羊">牡羊座 (3/21 - 4/19)</option>
+                            <option value="金牛">金牛座 (4/20 - 5/20)</option>
+                            <option value="雙子">雙子座 (5/21 - 6/21)</option>
+                            <option value="巨蟹">巨蟹座 (6/22 - 7/22)</option>
+                            <option value="獅子">獅子座 (7/23 - 8/22)</option>
+                            <option value="處女">處女座 (8/23 - 9/22)</option>
+                            <option value="天秤">天秤座 (9/23 - 10/23)</option>
+                            <option value="天蠍">天蠍座 (10/24 - 11/22)</option>
+                            <option value="射手">射手座 (11/23 - 12/21)</option>
+                            <option value="魔羯">魔羯座 (12/22 - 1/19)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="personAvatarUrl">自訂頭像 (上傳或網址)</label>
+                        <div class="avatar-upload-row">
+                            <input id="personAvatarUrl" name="avatarUrl" placeholder="圖片網址 https://... 或留空自動生成">
+                            <label for="avatarFileInput" class="upload-file-btn" title="從本機上傳圖片">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input id="avatarFileInput" type="file" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="personAnime">喜愛的動漫 / 共同話題</label>
+                    <input id="personAnime" name="anime" maxlength="100" placeholder="例如：航海王、鬼滅之刃、進擊的巨人">
+                </div>
+
+                <div class="form-group">
+                    <label for="personFood">喜愛的食物 / 禮物偏好</label>
+                    <input id="personFood" name="food" maxlength="120" placeholder="例如：無糖綠、草莓大福、生巧克力">
+                </div>
+
+                <div class="form-group">
+                    <label for="personNotes">主播筆記 / 互動備忘錄</label>
+                    <textarea id="personNotes" name="notes" rows="3" maxlength="300" placeholder="紀錄其直播間專屬笑梗、常在時間、PK 喜好等，方便主播互動提點！"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="secondary-btn" id="cancelEditorBtn">取消</button>
+                    <button type="submit" class="primary-btn glow-btn"><i class="fas fa-check"></i> 儲存資料</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 刪除確認彈窗 (Confirm Modal) -->
+    <div class="modal" id="confirmModal" aria-hidden="true">
+        <div class="modal-content confirm-dialog-content">
+            <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3>確認刪除此成員？</h3>
+            <p id="confirmMessage">刪除後該筆成員資料將從本機儲存中移除，無法直接復原。</p>
+            <div class="modal-footer center-actions">
+                <button id="cancelConfirmBtn" class="secondary-btn">取消保留</button>
+                <button id="okConfirmBtn" class="danger-btn"><i class="fas fa-trash-alt"></i> 確認刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 資料庫管理彈窗 (Data Management Modal) -->
+    <div class="modal" id="dataManageModal" aria-hidden="true">
+        <div class="modal-content data-manage-content">
+            <button class="close-btn" id="closeDataManageBtn" aria-label="關閉">&times;</button>
+            <div class="editor-header">
+                <i class="fas fa-database modal-header-icon"></i>
+                <div>
+                    <h2>資料庫備份與管理</h2>
+                    <p class="editor-sub">資料完整保存在瀏覽器 LocalStorage，免伺服器安全無個資外洩風險</p>
+                </div>
+            </div>
+            <div class="data-manage-body">
+                <div class="data-stat-card">
+                    <div class="stat-num" id="manageDataCount">0</div>
+                    <div class="stat-text">目前儲存成員總數</div>
+                </div>
+
+                <div class="manage-action-grid">
+                    <div class="manage-card">
+                        <i class="fas fa-file-export manage-card-icon"></i>
+                        <h4>匯出資料備份</h4>
+                        <p>將目前所有成員資料下載為 JSON 檔，可隨時復原或轉移至其他電腦。</p>
+                        <button id="modalExportBtn" class="primary-btn"><i class="fas fa-download"></i> 立即下載備份檔</button>
+                    </div>
+
+                    <div class="manage-card">
+                        <i class="fas fa-file-import manage-card-icon"></i>
+                        <h4>匯入資料備份</h4>
+                        <p>上傳 JSON 備份檔，支援覆蓋現有資料或合併新增。</p>
+                        <button id="modalImportBtn" class="secondary-btn"><i class="fas fa-upload"></i> 選擇檔案匯入</button>
+                    </div>
+
+                    <div class="manage-card">
+                        <i class="fas fa-rotate-left manage-card-icon"></i>
+                        <h4>重設官方範例資料</h4>
+                        <p>載入開源內建之 TikTok 主播示範成員，適合初次體驗系統展示。</p>
+                        <button id="resetSampleBtn" class="warning-btn"><i class="fas fa-sparkles"></i> 載入官方示範資料</button>
+                    </div>
+
+                    <div class="manage-card danger">
+                        <i class="fas fa-trash-can manage-card-icon"></i>
+                        <h4>清空所有資料</h4>
+                        <p>清除本機中儲存的所有成員資料（請務必先做好備份）。</p>
+                        <button id="clearAllBtn" class="danger-btn"><i class="fas fa-trash-alt"></i> 清空所有名單</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 生日狂歡彈窗 (Birthday Celebration Modal) -->
+    <div id="birthdayModal" class="modal birthday-modal" aria-hidden="true">
+        <div class="birthday-modal-content">
+            <div class="birthday-modal-header">
+                <h2>🎂 祝壽星生日快樂！</h2>
+                <button id="closeBirthdayModal" class="close-birthday-modal" aria-label="關閉">&times;</button>
+            </div>
+            <div class="birthday-modal-body">
+                <div class="birthday-animation">
+                    <i class="fas fa-birthday-cake birthday-cake-icon"></i>
+                    <div class="confetti-container"></div>
+                </div>
+                <p id="birthdayModalMessage" class="birthday-message-text"></p>
+                <div class="birthday-people-container" id="birthdayPeopleContainer">
+                    <!-- 生日人員卡片動態生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮動生日提醒按鈕 -->
+    <button id="showBirthdaysBtn" class="show-birthdays-btn" title="查看今日壽星">
+        <i class="fas fa-birthday-cake"></i>
+        <span>今日壽星提醒</span>
+    </button>
+
+    <!-- 輕提示 Toast 容器 -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- 卡片模板 -->
+    <template id="card-template">
+        <div class="card fade-in">
+            <div class="card-top-bar">
+                <span class="card-role-badge"></span>
+                <div class="card-quick-actions">
+                    <button class="quick-btn edit-quick-btn" title="編輯成員"><i class="fas fa-pen"></i></button>
+                    <button class="quick-btn delete-quick-btn" title="刪除成員"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>
+            <div class="card-avatar">
+                <img src="" alt="頭像" loading="lazy">
+            </div>
+            <div class="card-info">
+                <h3 class="card-name"></h3>
+                <div class="card-tiktok-id"></div>
+                <p class="card-zodiac"><i class="fas fa-cake-candles"></i> <span></span></p>
+                <p class="card-anime"><i class="fas fa-tv"></i> <span></span></p>
+                <p class="card-food"><i class="fas fa-utensils"></i> <span></span></p>
+                <p class="card-notes"><i class="fas fa-sticky-note"></i> <span></span></p>
+            </div>
+        </div>
+    </template>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+

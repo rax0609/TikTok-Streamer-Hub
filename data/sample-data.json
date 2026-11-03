@@ -1,0 +1,99 @@
+[
+  {
+    "id": "crew-001",
+    "name": "星星榜一",
+    "role": "榜一大哥",
+    "tiktokId": "@star_king",
+    "birthday": "8/21",
+    "zodiac": "獅子",
+    "anime": "航海王、鬼滅之刃",
+    "food": "無糖綠茶、生巧克力",
+    "notes": "每晚 PK 助攻大將，主播唱抒情歌時必刷嘉年華！遇到黑粉會霸氣護航。",
+    "avatar": ""
+  },
+  {
+    "id": "crew-002",
+    "name": "泡泡小檸檬",
+    "role": "管理員",
+    "tiktokId": "@lemon_pop",
+    "birthday": "4/2",
+    "zodiac": "牡羊",
+    "anime": "葬送的芙莉蓮、間諜家家酒",
+    "food": "草莓大福、鮮奶茶微糖微冰",
+    "notes": "公會元老級管理員，開播控場神手，負責幫忙紀錄直播精彩片刻與抽獎名單。",
+    "avatar": ""
+  },
+  {
+    "id": "crew-003",
+    "name": "大熊不熬夜",
+    "role": "守護神",
+    "tiktokId": "@bear_guard",
+    "birthday": "10/3",
+    "zodiac": "天秤",
+    "anime": "進擊的巨人、排球少年",
+    "food": "厚切牛排、黑咖啡",
+    "notes": "每天準時開播報到，常常提醒主播喝水休息，守護燈牌已連續點亮超過 300 天！",
+    "avatar": ""
+  },
+  {
+    "id": "crew-004",
+    "name": "甜心可樂",
+    "role": "鐵粉",
+    "tiktokId": "@sweet_cola",
+    "birthday": "6/9",
+    "zodiac": "雙子",
+    "anime": "咒術迴戰、鏈鋸人",
+    "food": "焦糖烤布丁、起司熔岩炸雞",
+    "notes": "彈幕氣氛帶動大師，只要他在彈幕就停不下來，笑點特別低。",
+    "avatar": ""
+  },
+  {
+    "id": "crew-005",
+    "name": "夜月神偷",
+    "role": "榜二大哥",
+    "tiktokId": "@night_phantom",
+    "birthday": "11/7",
+    "zodiac": "天蠍",
+    "anime": "死亡筆記本、Code Geass",
+    "food": "豚骨拉麵、炙燒三文魚握壽司",
+    "notes": "平時默默掛機，但關鍵 PK 戰役最後幾秒偷塔極準，喜歡給主播驚喜！",
+    "avatar": ""
+  },
+  {
+    "id": "crew-006",
+    "name": "抹茶糰子",
+    "role": "燈牌常駐",
+    "tiktokId": "@matcha_dango",
+    "birthday": "1/5",
+    "zodiac": "魔羯",
+    "anime": "夏目友人帳、千與千尋",
+    "food": "抹茶生乳捲、白玉紅豆湯",
+    "notes": "常在深夜心靈電台連麥，聲音溫柔好聽，粉絲群活躍核心小天使。",
+    "avatar": ""
+  },
+  {
+    "id": "crew-007",
+    "name": "暴走阿柴",
+    "role": "連麥嘉賓",
+    "tiktokId": "@chai_streamer",
+    "birthday": "7/25",
+    "zodiac": "獅子",
+    "anime": "一拳超人、火影忍者",
+    "food": "麻辣火鍋、芒果冰沙",
+    "notes": "友誼主播兼搞笑擔當，PK 輸了會跳花手或做怪表情，互動效果直接拉滿！",
+    "avatar": ""
+  },
+  {
+    "id": "crew-008",
+    "name": "神祕飛行員",
+    "role": "家族成員",
+    "tiktokId": "@sky_pilot",
+    "birthday": "",
+    "zodiac": "",
+    "anime": "星際牛仔",
+    "food": "",
+    "notes": "偶爾飛進直播間刷一波火箭就下線的低調神秘大佬，生日與喜好尚在探聽中...",
+    "avatar": ""
+  }
+]
+
